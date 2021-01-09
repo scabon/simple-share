@@ -1,37 +1,23 @@
-## Welcome to GitHub Pages
+# Welcome to Simple-Share
 
-You can use the [editor on GitHub](https://github.com/scabon/simple-share/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+## What
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+I'm not yet shure what exactly will end-up in here (or even if I will continue on with this experiment).  
+But probably a mix of:  
 
-### Markdown
+* Links and bookmarks I find useful, à la [Shaarli](https://github.com/shaarli/Shaarli)
+* Configuration options/settings I can't remember
+* Troubleshooting steps
+* Code samples
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Why
 
-```markdown
-Syntax highlighted code block
+When playing arround with a Rapsberry Pi, or on a Linux VM, or writing PowerShell scripts I find mysleft searching for answsers online.  
 
-# Header 1
-## Header 2
-### Header 3
+There is not always an easy solution that matches my setup, I often have to combine steps from different sources.  
+I do take notes on a OneNote, but it's not as efficient as full blown Git repo with Markdown pages and it is not shared, meaning I'm not helping others as others have helped me.  
 
-- Bulleted
-- List
+## Who
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/scabon/simple-share/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+I'm a Solutions Architect working at a small company.  
+I am no developer, but do write some PowerShell and Javascript from time to time.  
