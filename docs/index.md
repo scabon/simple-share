@@ -14,12 +14,12 @@ But probably a mix of:
 
 ## Why
 
-When playing arround with a Rapsberry Pi, or on a Linux VM, or writing PowerShell scripts I find mysleft searching for answsers online.  
+When playing arround with a `Rapsberry Pi`, or on a `Linux VM`, or writing `PowerShell` scripts I find mysleft searching for answsers online.  
 
 There is not always an easy solution that matches my setup, I often have to combine steps from different sources.  
-I do take notes on a OneNote, but it's not as efficient as full blown Git repo with Markdown pages and it is not shared, meaning I'm not helping others as others have helped me.  
+I do take notes on a `OneNote`, but it's not as efficient as full blown `Git` repo with `Markdown` pages and it is not shared, meaning I'm not helping others as others have helped me.  
 
 ## Who
 
 I'm a Solutions Architect working at a small company.  
-I am no developer, but do write some PowerShell and Javascript from time to time.  
+I am no developer, but do write some `PowerShell` and `Javascript` from time to time.  
