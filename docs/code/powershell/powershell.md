@@ -22,7 +22,11 @@ There no `sudo` in PowerShell, but you can start a new PowerShell console as an 
 
 > See the [official documentation](https://docs.microsoft.com/en-us/powershell/module/Microsoft.PowerShell.Management/Start-Process?view=powershell-7.1#example-5--start-powershell-as-an-administrator)  
 
-It's not as short as a simple `sudo`, so I like to add an Alias in  my PowerShell profile. For example:  
+`Start-Process powershell -Verb runAs` might launch the wrong (older) powershell version on your system.  
+You can use an explicit path instead:  
+`Start-Process -FilePath 'C:\Program Files\PowerShell\7\pwsh.exe' -Verb runAs`  
+
+It's not as short or as a simple `sudo`, so I like to add an **Alias** in my PowerShell profile. For example:  
 
 ```powershell
 # Add Sudo Alias to launch new PowerShell console as admin
@@ -31,8 +35,6 @@ Function SudoPosh {
         # Command to launch
         [string]$Command
     )
-    # The following will start the wrong version of powershell (on my system), that also points to another profile file...
-    # Start-Process powershell -Verb runAs
     [string]$ArgsList = "-NoExit"
     if( $Command.Length -gt 0 ) {
         $ArgsList += " -Command $Command"
@@ -44,7 +46,8 @@ Set-Alias sudo SudoPosh
 ```
 
 > This will open a PowerShell console as an administrator and launch the a simple command if any
-> For instance `sudo Get-Process`; but is will **not** work for more complex entries like `sudo get-process *java*`
+> For instance `sudo Get-Process`; but is will **not** work for more complex entries like `sudo get-process *java*`  
+> For complex commands, just run `sudo` and then type your posh commands  
 > The terminal will not be closed after running (`-NoExit` option)
 
 ## Remoting
