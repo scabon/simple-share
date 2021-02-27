@@ -27,7 +27,10 @@ It's not as short as a simple `sudo`, so I like to add an Alias in  my PowerShel
 ```powershell
 # Add Sudo Alias to launch new PowerShell console as admin
 Function SudoPosh {
-    Start-Process powershell -Verb runAs
+    # This might launch another (older) version of powershell
+    # Start-Process powershell -Verb runAs
+    # You can specifiy the path to the newest powersehll version on your system
+    Start-Process -FilePath "C:\Program Files\PowerShell\7\pwsh.exe" -Verb runAs
 }
 Set-Alias sudo SudoPosh
 ```
