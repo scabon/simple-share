@@ -5,9 +5,12 @@
 Here is some sample code to use powershell & remoting to update target systems (Windows or Linux) using ssh:  
 
 * [session.ps1](./session.ps1): create a session to a list of targets & runs an update script
+  * [View on Github](https://github.com/scabon/simple-share/blob/main/docs/code/powershell/remote/session.ps1)
 * [session_call.ps1](./session_call.ps1): calls the `session` script with a list of hosts
+  * [View on Github](https://github.com/scabon/simple-share/blob/main/docs/code/powershell/remote/session_call.ps1)
 * [update.ps1](./update.ps1): updates the hosts (Windows or Linux)
   * Requires a Powershell module for Windows hosts
+  * [View on Github](https://github.com/scabon/simple-share/blob/main/docs/code/powershell/remote/update.ps1)
 
 ## Via SSH
 
