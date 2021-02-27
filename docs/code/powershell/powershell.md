@@ -27,13 +27,25 @@ It's not as short as a simple `sudo`, so I like to add an Alias in  my PowerShel
 ```powershell
 # Add Sudo Alias to launch new PowerShell console as admin
 Function SudoPosh {
-    # This might launch another (older) version of powershell
+    param(
+        # Command to launch
+        [string]$Command
+    )
+    # The following will start the wrong version of powershell (on my system), that also points to another profile file...
     # Start-Process powershell -Verb runAs
-    # You can specifiy the path to the newest powersehll version on your system
-    Start-Process -FilePath "C:\Program Files\PowerShell\7\pwsh.exe" -Verb runAs
+    [string]$ArgsList = "-NoExit"
+    if( $Command.Length -gt 0 ) {
+        $ArgsList += " -Command $Command"
+    }
+    Write-Host "Launching: Start-Process -FilePath 'C:\Program Files\PowerShell\7\pwsh.exe' -Verb runAs -ArgumentList $ArgsList"
+    Start-Process -FilePath 'C:\Program Files\PowerShell\7\pwsh.exe' -Verb runAs -ArgumentList $ArgsList
 }
 Set-Alias sudo SudoPosh
 ```
+
+> This will open a PowerShell console as an administrator and launch the a simple command if any
+> For instance `sudo Get-Process`; but is will **not** work for more complex entries like `sudo get-process *java*`
+> The terminal will not be closed after running (`-NoExit` option)
 
 ## Remoting
 
