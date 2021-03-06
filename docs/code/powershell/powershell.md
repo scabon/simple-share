@@ -26,7 +26,7 @@ There no `sudo` in PowerShell, but you can start a new PowerShell console as an 
 You can use an explicit path instead:  
 `Start-Process -FilePath 'C:\Program Files\PowerShell\7\pwsh.exe' -Verb runAs`  
 
-It's not as short or as a simple `sudo`, so I like to add an **Alias** in my PowerShell profile. For example:  
+It's not as short or as a simple `sudo`, so I like to add an **Alias** in my PowerShell $profile. For example:  
 
 ```powershell
 # Add Sudo Alias to launch new PowerShell console as admin

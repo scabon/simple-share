@@ -38,12 +38,31 @@ You should now be able to connect to your Windows server, here with an msn accou
 
 ### SSH Troubleshooting
 
+#### Error connecting to agent: No such file or directory
+
+The `ssh-agent` service is not started.  
+Try the following as Administrator:  
+
+```powershell  
+Start-Service ssh-agent
+```
+
+You can set the service to start automatically:  
+
+```powershell
+Set-Service ssh-agent -StartupType Automatic
+```
+
 #### unable to start ssh-agent service, error :1058
 
 When trying to run `ssh-agent`, if you have:  
 `unable to start ssh-agent service, error :1058`  
 Run the following PoserShell as an Administrator:  
-`Set-Service ssh-agent -StartupType Manual`  
+
+```powersehll  
+Set-Service ssh-agent
+```  
+
 You should then be able to start `ssh-agent` without error.  
 
 #### warning: agent returned different signature type ssh-rsa (expected rsa-sha2-512)
