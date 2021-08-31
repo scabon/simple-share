@@ -7,16 +7,18 @@ param()
 # Each hashmap contains: HostName, UserName, [Port], [KeyFilePath]
 [System.Collections.Hashtable[]]$SSHConnection = @()
 $SSHConnection += @{
-    HostName = 'host1'
-    UserName = 'userA'
+    HostName = 'DESKTOP-NXI'
+    UserName = 'derzeppel@msn.com'
 }
 $SSHConnection += @{
-    HostName = 'host2'
-    UserName = 'userB'
+    HostName = '192.168.0.19'
+    UserName = 'derzeppel'
 }
 
 # Call main script
 ./session.ps1 `
-    -HostName 'userC@host3', 'userN@hostX' `
+    -HostName 'debian@ns330150.ip-5-196-66.eu', 'pi@raspberrypi' `
     -SSHConnection $SSHConnection `
-    -UpdateFilePath './update.ps1'
+    -UpdateFilePath './update.ps1' `
+    -Wake
+# WSL 'zeppel@127.0.0.1'

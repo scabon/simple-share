@@ -12,7 +12,9 @@ param(
     [System.Collections.Hashtable[]]$SSHConnection,
     # Script to run on remotes
     [Parameter(Mandatory=$true)]
-    [string]$UpdateFilePath
+    [string]$UpdateFilePath,
+    # Try to wake up host
+    [switch]$Wake
 )
 
 if( -Not (Test-Path $UpdateFilePath) ) {
@@ -39,10 +41,62 @@ Function RunForSession {
     }
 }
 
+# Test connection to host & try to wake up if option is set
+function Test-ConnectionAndWake {
+    param(
+         # Hostname
+         [string]$CurrentHost
+    )
+    [string]$HostName
+    # If the Current host contains an @, extract trailing chararacters as hostname
+    if( $CurrentHost.Contains("@")) {
+        $HostName = $CurrentHost.Substring( $CurrentHost.LastIndexOf('@') )
+    } else {
+        $HostName = $CurrentHost
+    }
+    # Should be [TestNetConnectionResult]$ConnectionResult, but gives the following error:
+    # Unable to find type [TestNetConnectionResult]
+    $ConnectionResult = Test-NetConnection -ComputerName $HostName -Port 22
+    if ( -not ( $true -eq $ConnectionResult.TcpTestSucceeded ) ) {
+        if( $wake ) {
+            [string]$IPAddress = $ConnectionResult.RemoteAddress
+            [string[]]$MacInfo = & arp -a $IPAddress
+            Write-Debug "Mac info: $MacInfo"
+            if( "No ARP Entries Found." -eq $MacInfo[0] ) {
+                Write-Debug "Could not wake up host $Hostname, MAC Address not known in ARP table"
+            } else {
+                # Extract MAC Address
+                [string]$MacAddr
+                foreach ($MacI in $MacInfo) {
+                    [string]$Line = $MacInfo -match '([a-fA-F0-9]{2}-){5}[a-fA-F0-9]{2}'
+                    if ( -not ( $null -eq $Line ) ) {
+                        $MacAddr = $Matches[0]
+                        Write-Debug "Found MAC: $MacAddr"
+                    }
+                }
+                if ( -Not ( $null -eq $MacAddr ) ) {
+                    # Send magic packet
+                    # Courtesy of: https://www.pdq.com/blog/wake-on-lan-wol-magic-packet-powershell/
+                    [Byte[]]$MacByteArray = $MacAddr -split "-" | ForEach-Object { [Byte] "0x$_"}
+                    [Byte[]]$MagicPacket = (,0xFF * 6) + ($MacByteArray  * 16)
+                    $UdpClient = New-Object System.Net.Sockets.UdpClient
+                    $UdpClient.Connect(([System.Net.IPAddress]::Broadcast),7)
+                    $UdpClient.Send($MagicPacket,$MagicPacket.Length)
+                    $UdpClient.Close()
+                }
+            }
+        }
+    } else {
+        Write-Debug "Connection to $Hostname succeeded"
+    }
+}
+
 # Run for sessions if any
 if( -Not $null -eq $SSHConnection ) {
     Write-Debug "Connecting using SSHConnection parameter"
     foreach ($SSHC in $SSHConnection) {
+        Test-ConnectionAndWake -CurrentHost $SSHC.Hostname
+        Write-Debug "Running: New-PSSession -SSHConnection $($SSHC.Hostname)"
         $Session = New-PSSession -SSHConnection $SSHC
         RunForSession -Session $Session -CurrentHost $SSHC.Hostname   
     }
@@ -52,6 +106,7 @@ if( -Not $null -eq $SSHConnection ) {
 if ( -Not $null -eq $HostName ) {
     Write-Debug "Connecting using Hostname parameter"
     foreach( $CurrentHost in $HostName ) {
+        Test-ConnectionAndWake -CurrentHost $CurrentHost
         Write-Debug "Running: New-PSSession -HostName $CurrentHost"
         $Session = New-PSSession -HostName $CurrentHost
         RunForSession -Session $Session -CurrentHost $CurrentHost
