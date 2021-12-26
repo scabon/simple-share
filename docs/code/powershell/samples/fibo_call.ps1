@@ -1,3 +1,3 @@
-./iteration.ps1 `
+./fibo.ps1 `
     -NbIterations 6 `
     -Debug
