@@ -116,7 +116,7 @@ function Update-Item {
         $Item.Title = Read-Host " - Title: $($Item.Title)?"
         $Item.Description = Read-Host " - Description: $($Item.Description)?"
         # ToDo: handle dates
-        $Item.Description = Read-Host " - Status: $($Item.Status)?"
+        $Item.Status = Read-Host " - Status: $($Item.Status)?"
         $Item.SetIcon()
         # ToDo:
         # Is the object updated directly? Removed from list then added again.
@@ -209,7 +209,7 @@ function Run {
                 # Save Item
                 Save-Items
             }
-            6 {
+            9 {
                 # Save & Quit
                 Save-Items
                 Show-Out
