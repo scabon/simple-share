@@ -52,3 +52,5 @@ As a Senior member of the `Professional Services Team`, my **responsibilities** 
 | 2009 - 2011       | 2 years       | France    | Atos              | Business Intelligence Developer (apprenticeship)  | Development of dashboards & KPIs using ETL & reporting software |
 | 2007 - 2009       | 2 years       | France    | Atos              | Multilingual HelpDesk technician (part-time)      | Level 1 HelpDesk for employees of large client companies |
 | 2004 - 2005       | 1 year        | France    | Orange            | Shop Salesperson (part-time)                      | Sell mobiles phones & internet access subscriptions |
+
+> For more details, see [My Profile on LinkedIn](https://www.linkedin.com/in/sebastiencabon/ "A link to my LinkedIn profile")
