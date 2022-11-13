@@ -43,8 +43,6 @@ As a Senior member of the `Professional Services Team`, my **responsibilities** 
 
 ## Jobs history
 
-### Table
-
 | Years             | Duration      | Location  | Company           | Position                                          | Short Description     |
 | ---               | ---           | ---       | ---               | ---                                               | ---                   |
 | 2018 - present    | ~5 years      | France    | Brainwave GRC     | Solutions Architect                               | Consultancy on GRC/IAM Projects, Documentation, Training |
@@ -54,20 +52,3 @@ As a Senior member of the `Professional Services Team`, my **responsibilities** 
 | 2009 - 2011       | 2 years       | France    | Atos              | Business Intelligence Developer (apprenticeship)  | Development of dashboards & KPIs using ETL & reporting software |
 | 2007 - 2009       | 2 years       | France    | Atos              | Multilingual HelpDesk technician (part-time)      | Level 1 HelpDesk for employees of large client companies |
 | 2004 - 2005       | 1 year        | France    | Orange            | Shop Salesperson (part-time)                      | Sell mobiles phones & internet access subscriptions |
-
-### List
-
-* Solutions Architect @ Brainwave GRC, France ; 2018 - present (~5 years)
-  * Consultancy on GRC/IAM Projects, Documentation, Training
-* Senior Information Security consultant @ In Fidem, Canada ; 2016 - 2018 (2 years)
-  * Consulting on many different projects for CISOs / Security Teams
-* Pre-sales engineer @ Brainwave, Canada ; 2014 - 2016 (2 years)
-  * POCs and development of new features
-* Information Security consultant @ Synetis, France ; 2011 - 2014 (3 years)
-  * Developer for a large IAM project (Brainwave GRC)
-* Business Intelligence Developer @ Atos, France ; 2009 - 2011 (2 years, apprenticeship)
-  * Development of dashboards & KPIs using ETL & reporting software
-* Multilingual HelpDesk technician @ Atos, France ; 2007 - 2009 (2 years, part-time)
-  * Level 1 HelpDesk for employees of large client companies
-* Shop Salesperson @ Orange, France ; 2004 - 2005 (1 year, part-time)
-  * Sell mobiles phones & internet access subscriptions
