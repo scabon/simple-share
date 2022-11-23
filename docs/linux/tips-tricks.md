@@ -24,6 +24,8 @@ BUG_REPORT_URL="http://www.raspbian.org/RaspbianBugs"
 
 Microsoft SQL Server updates will fail on WSL because `systemctl` is not available.
 
+> Updated: no more required as [systemd is available on WSL!](https://devblogs.microsoft.com/commandline/systemd-support-is-now-available-in-wsl/ "How to install systemd on WSL")
+
 THe error logs are:
 
 ```bash
