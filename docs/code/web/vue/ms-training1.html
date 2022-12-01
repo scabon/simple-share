@@ -1,0 +1,18 @@
+<!-- the HTML element which will host our app -->
+<div id='app'>
+    Hello {{ lastName }}, {{ firstName }}
+</div>
+
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+    const App = Vue.createApp({
+        data() {
+            return {
+                firstName: 'Christopher',
+                lastName: 'Harrison'
+            };
+        }
+    });
+    // Registering and mounting our app
+    App.mount('#app');
+</script>
