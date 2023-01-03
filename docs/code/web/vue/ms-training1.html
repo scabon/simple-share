@@ -1,6 +1,9 @@
 <!-- the HTML element which will host our app -->
 <div id='app'>
-    Hello {{ lastName }}, {{ firstName }}
+    Hello {{ lastName }}, {{ firstName }}. Your students are:
+    <ul id="demo">
+        <li v-for="(name, index) in names" :key="index">{{ name }}</div>
+    </ul>
 </div>
 
 <script src="https://unpkg.com/vue@next"></script>
@@ -9,7 +12,8 @@
         data() {
             return {
                 firstName: 'Christopher',
-                lastName: 'Harrison'
+                lastName: 'Harrison',
+                names: ['Susan', 'Peter', 'Bill' ]
             };
         }
     });
