@@ -72,6 +72,15 @@ If( -Not (Test-Path $TGZFile)) {
 }
 Write-Host '[Backup] Done'
 
+<# Test connection to remote server #>
+Write-Host '[Copy] Testing connection to remote server'
+$TestConnection = Test-Connection -ComputerName $BackupServer -TcpPort 22 -Count 1 -Quiet
+if ( $TestConnection -eq $True ) {
+    Write-Host "[Copy] Connection to $BackupServer port 22 successful"
+} else {
+    Write-Error "[Copy] Unable to connect to $BackupServer"
+    exit 1
+}
 <# Copy backup files to remote server #>
 Write-Host '[Copy] Copying backup files to remote server'
 # Check if the backup credentials file exists
