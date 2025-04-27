@@ -6,6 +6,8 @@ Create backup of yunohost instance and copy it to a remote server.
 You need a Credential file with the password for the remote server.
 .PARAMETER BackupServer
 The remote server to copy the backup to.
+.PARAMETER BackupServerPort
+The port to use for the remote server connection (ssh). Default is 22.
 .PARAMETER RemoteBackupFolder
 The folder on the remote server to copy the backup to.
 .PARAMETER BackupCredentialsFile
@@ -24,11 +26,13 @@ There are two files for each backup.
 param (
     # Server to copy the backup to
     [string]$BackupServer = 'zeppel.org',
+    # Backup server port
+    [int]$BackupServerPort = 22,
     # Folder on the remote server to copy the backup to
     [string]$RemoteBackupFolder = '/backups',
     # File containing the username and password for the remote server
     [string]$BackupCredentialsFile = 'backupcreds.xml',
-    # Number of backups to keep on the local server
+    # Number of backups to keep on the local server (0 to disable)
     [int]$NbLocalBackups = 3
 )
 
@@ -74,11 +78,11 @@ Write-Host '[Backup] Done'
 
 <# Test connection to remote server #>
 Write-Host '[Copy] Testing connection to remote server'
-$TestConnection = Test-Connection -ComputerName $BackupServer -TcpPort 22 -Count 1 -Quiet
+$TestConnection = Test-Connection -ComputerName $BackupServer -TcpPort $BackupServerPort -Count 1 -Quiet
 if ( $TestConnection -eq $True ) {
-    Write-Host "[Copy] Connection to $BackupServer port 22 successful"
+    Write-Host "[Copy] Connection to $BackupServer port $BackupServerPort successful"
 } else {
-    Write-Error "[Copy] Unable to connect to $BackupServer"
+    Write-Error "[Copy] Unable to connect to $BackupServer on port $BackupServerPort"
     exit 1
 }
 <# Copy backup files to remote server #>
@@ -94,8 +98,8 @@ If( -Not (Test-Path $BackupCredentialsFile)) {
 [PSCredential]$BackupCredentials = Import-Clixml $BackupCredentialsFile
 # Copy backup files to remote server
 [string]$BackupUser = $BackupCredentials.UserName
-Write-Host "[Copy] scp $TGZFile $InfoFile "$BackupUser@$($BackupServer):$RemoteBackupFolder
-[string[]]$SCPConsole = & sshpass -p $BackupCredentials.GetNetworkCredential().password scp $TGZFile $InfoFile "$BackupUser@$($BackupServer):$RemoteBackupFolder"
+Write-Host "[Copy] scp -P $BackupServerPort $TGZFile $InfoFile "$BackupUser@$($BackupServer):$RemoteBackupFolder
+[string[]]$SCPConsole = & sshpass -p $BackupCredentials.GetNetworkCredential().password scp -P $BackupServerPort $TGZFile $InfoFile "$BackupUser@$($BackupServer):$RemoteBackupFolder"
 if ( $SCPConsole.Count -gt 0 ) {
     Write-Error '[Copy] Something went wrong with the SCP command'
     Write-Host $SCPConsole
@@ -104,8 +108,8 @@ if ( $SCPConsole.Count -gt 0 ) {
 
 # Check if the files were copied to the remote server
 Write-Host '[Copy] Checking if the files were copied to the remote server: '
-Write-Host "[Copy] ssh $BackupUser@$BackupServer ls -1t $RemoteBackupFolder | head -n 2"
-[string[]]$SSHConsole = & sshpass -p $BackupCredentials.GetNetworkCredential().password ssh $BackupUser@$BackupServer ls -1t $RemoteBackupFolder | head -n 2
+Write-Host "[Copy] ssh -p $BackupServerPort $BackupUser@$BackupServer ls -1t $RemoteBackupFolder | head -n 2"
+[string[]]$SSHConsole = & sshpass -p $BackupCredentials.GetNetworkCredential().password ssh -p $BackupServerPort $BackupUser@$BackupServer ls -1t $RemoteBackupFolder | head -n 2
 if ( $SSHConsole.Count -lt 2 ) {
     Write-Error '[Copy] Something went wrong with the SSH command'
     Write-Host $SSHConsole
