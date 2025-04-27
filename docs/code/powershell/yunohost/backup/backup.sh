@@ -8,4 +8,4 @@
 # You can install it from https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux
 # You can run this script using the following command:
 # ./backup.sh -BackupServer 'zeppel.org' -RemoteBackupFolder '/backups' -BackupCredentialsFile 'backupcreds.xml'
-pwsh -File ./backup.ps1 -BackupServer 'zeppel.org' -RemoteBackupFolder '/backups' -BackupCredentialsFile 'backupcreds.xml'
+pwsh -File ./backup.ps1 -BackupServer 'zeppel.org' -BackupServerPort 22 -RemoteBackupFolder '/backups/yunohost' -BackupCredentialsFile 'backupcreds.xml'

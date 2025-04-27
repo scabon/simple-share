@@ -29,7 +29,7 @@ param (
     # Backup server port
     [int]$BackupServerPort = 22,
     # Folder on the remote server to copy the backup to
-    [string]$RemoteBackupFolder = '/backups',
+    [string]$RemoteBackupFolder = '/backups/yunohost',
     # File containing the username and password for the remote server
     [string]$BackupCredentialsFile = 'backupcreds.xml',
     # Number of backups to keep on the local server (0 to disable)
