@@ -128,7 +128,7 @@ if ( $NbLocalBackups -lt 1 ) {
     Write-Host '[Cleanup] Ignoring local backup rotation'
 } else {
     Write-Host "[Cleanup] Keeping $NbLocalBackups local backups"
-    [int]$NbFilesToKeep = $NbLocalBackups * 2
+    [int]$NbFilesToKeep = $NbLocalBackups * 3
     [System.IO.FileInfo[]]$BackUpFiles = Get-ChildItem -Path $LocalBackupFolder
     Write-Host "[Cleanup] Total number of files in backup folder: $($BackUpFiles.Count)"
     [int]$NbFilesToRemove = $BackUpFiles.Count - $NbFilesToKeep
