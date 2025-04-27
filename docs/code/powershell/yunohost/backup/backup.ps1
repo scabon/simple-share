@@ -36,8 +36,15 @@ param (
     [int]$NbLocalBackups = 3
 )
 
+Function Write-Timestamped {
+    param (
+        [string]$Message
+    )
+    Write-Host "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'): PS - $Message"
+}
+
 # Launch the yunohost backup command and capture the output
-Write-Host "[Backup] Creating backup with 'sudo yunohost backup create'"
+Write-Timestamped "[Backup] Creating backup with 'sudo yunohost backup create'"
 [string[]]$BackupConsole = & sudo yunohost backup create
 [bool]$Success = $False
 [string]$BackupName = ''
@@ -50,98 +57,98 @@ foreach( $Line in $BackupConsole) {
     }
 }
 if( -Not $Success ) {
-    Write-Host '[Backup] Backup failed'
+    Write-Timestamped '[Backup] Backup failed'
     exit 1
 }
-Write-Host "[Backup] Backup created: $BackupName"
+Write-Timestamped "[Backup] Backup created: $BackupName"
 # Backups folder
 [string]$LocalBackupFolder = '/home/yunohost.backup/archives'
 # Info file
 [string]$InfoFileName = "$BackupName.info.json"
 [string]$InfoFile = "$LocalBackupFolder/$InfoFileName"
-Write-Host "[Backup] Info file: $InfoFile"
+Write-Timestamped "[Backup] Info file: $InfoFile"
 # Check if the info file exists
 If( -Not (Test-Path $InfoFile)) {
-    Write-Host '[Backup] Info file not found'
+    Write-Timestamped '[Backup] Info file not found'
     exit 1
 }
 # TGZ file
 [string]$TGZFileName = "$BackupName.tar.gz"
 [string]$TGZFile = "$LocalBackupFolder/$TGZFileName"
-Write-Host "[Backup] TGZ file: $TGZFile"
+Write-Timestamped "[Backup] TGZ file: $TGZFile"
 # Check if the tgz file exists
 If( -Not (Test-Path $TGZFile)) {
-    Write-Host '[Backup] TGZ file not found'
+    Write-Timestamped '[Backup] TGZ file not found'
     exit 1
 }
-Write-Host '[Backup] Done'
+Write-Timestamped '[Backup] Done'
 
 <# Test connection to remote server #>
-Write-Host '[Copy] Testing connection to remote server'
+Write-Timestamped '[Copy] Testing connection to remote server'
 $TestConnection = Test-Connection -ComputerName $BackupServer -TcpPort $BackupServerPort -Count 1 -Quiet
 if ( $TestConnection -eq $True ) {
-    Write-Host "[Copy] Connection to $BackupServer port $BackupServerPort successful"
+    Write-Timestamped "[Copy] Connection to $BackupServer port $BackupServerPort successful"
 } else {
     Write-Error "[Copy] Unable to connect to $BackupServer on port $BackupServerPort"
     exit 1
 }
 <# Copy backup files to remote server #>
-Write-Host '[Copy] Copying backup files to remote server'
+Write-Timestamped '[Copy] Copying backup files to remote server'
 # Check if the backup credentials file exists
 If( -Not (Test-Path $BackupCredentialsFile)) {
     Write-Error '[Copy] Backup credentials file not found'
-    Write-Host '[Copy] Please create the file with the following commands: '
-    Write-Host '    $Credentials = Get-Credential'
-    Write-Host '    $Credentials | Export-Clixml backupcreds.xml'
+    Write-Timestamped '[Copy] Please create the file with the following commands: '
+    Write-Timestamped '    $Credentials = Get-Credential'
+    Write-Timestamped '    $Credentials | Export-Clixml backupcreds.xml'
     exit 1
 }
 [PSCredential]$BackupCredentials = Import-Clixml $BackupCredentialsFile
 # Copy backup files to remote server
 [string]$BackupUser = $BackupCredentials.UserName
-Write-Host "[Copy] scp -P $BackupServerPort $TGZFile $InfoFile "$BackupUser@$($BackupServer):$RemoteBackupFolder
+Write-Timestamped "[Copy] scp -P $BackupServerPort $TGZFile $InfoFile "$BackupUser@$($BackupServer):$RemoteBackupFolder
 [string[]]$SCPConsole = & sshpass -p $BackupCredentials.GetNetworkCredential().password scp -P $BackupServerPort $TGZFile $InfoFile "$BackupUser@$($BackupServer):$RemoteBackupFolder"
 if ( $SCPConsole.Count -gt 0 ) {
     Write-Error '[Copy] Something went wrong with the SCP command'
-    Write-Host $SCPConsole
+    Write-Timestamped $SCPConsole
     exit 1
 }
 
 # Check if the files were copied to the remote server
-Write-Host '[Copy] Checking if the files were copied to the remote server: '
-Write-Host "[Copy] ssh -p $BackupServerPort $BackupUser@$BackupServer ls -1t $RemoteBackupFolder | head -n 2"
+Write-Timestamped '[Copy] Checking if the files were copied to the remote server: '
+Write-Timestamped "[Copy] ssh -p $BackupServerPort $BackupUser@$BackupServer ls -1t $RemoteBackupFolder | head -n 2"
 [string[]]$SSHConsole = & sshpass -p $BackupCredentials.GetNetworkCredential().password ssh -p $BackupServerPort $BackupUser@$BackupServer ls -1t $RemoteBackupFolder | head -n 2
 if ( $SSHConsole.Count -lt 2 ) {
     Write-Error '[Copy] Something went wrong with the SSH command'
-    Write-Host $SSHConsole
+    Write-Timestamped $SSHConsole
     exit 1
 } elseif( $SSHConsole -contains $TGZFileName -and $SSHConsole -contains $InfoFileName ) {
-    Write-Host '[Copy] Backup files were copied to the remote server'
+    Write-Timestamped '[Copy] Backup files were copied to the remote server'
 } else {
-    Write-Host '[Copy] Not sure of the result!'
-    Write-Host $SSHConsole
+    Write-Timestamped '[Copy] Not sure of the result!'
+    Write-Timestamped $SSHConsole
 }
-Write-Host '[Copy] Done'
+Write-Timestamped '[Copy] Done'
 
 # Rotate local backups
-Write-Host '[Cleanup] Rotating local backups'
+Write-Timestamped '[Cleanup] Rotating local backups'
 if ( $NbLocalBackups -lt 1 ) {
-    Write-Host '[Cleanup] Ignoring local backup rotation'
+    Write-Timestamped '[Cleanup] Ignoring local backup rotation'
 } else {
-    Write-Host "[Cleanup] Keeping $NbLocalBackups local backups"
+    Write-Timestamped "[Cleanup] Keeping $NbLocalBackups local backups"
     [int]$NbFilesToKeep = $NbLocalBackups * 3
     [System.IO.FileInfo[]]$BackUpFiles = Get-ChildItem -Path $LocalBackupFolder
-    Write-Host "[Cleanup] Total number of files in backup folder: $($BackUpFiles.Count)"
+    Write-Timestamped "[Cleanup] Total number of files in backup folder: $($BackUpFiles.Count)"
     [int]$NbFilesToRemove = $BackUpFiles.Count - $NbFilesToKeep
     if ( $NbFilesToRemove -lt 1 ) {
-        Write-Host '[Cleanup] No files to remove'
+        Write-Timestamped '[Cleanup] No files to remove'
     } else {
-        Write-Host "[Cleanup] Number of files to remove: $NbFilesToRemove"
+        Write-Timestamped "[Cleanup] Number of files to remove: $NbFilesToRemove"
         $BackUpFiles | Sort-Object -Property CreationTime | Select-Object -First $NbFilesToRemove | Remove-Item -Force
         [System.IO.FileInfo[]]$BackUpFiles = Get-ChildItem -Path $LocalBackupFolder
-        Write-Host "[Cleanup] Remaining number of files in backup folder: $($BackUpFiles.Count)"
+        Write-Timestamped "[Cleanup] Remaining number of files in backup folder: $($BackUpFiles.Count)"
     }
 }
-Write-Host '[Cleanup] Done'
+Write-Timestamped '[Cleanup] Done'
 
-Write-Host 'Done'
+Write-Timestamped 'Done'
 exit 0
