@@ -7,14 +7,18 @@ param (
     # Number of backups to keep
     [int]$BackupsToKeep = 10,
     # Path to the folder to rotate
-    [string]$BackupFolder = '/backups/yunohost/'
+    [string]$BackupFolder = '/backups/yunohost/',
+    # Log file path
+    [string]$LogFile = './backup.log'
 )
 
 Function Write-Timestamped {
     param (
         [string]$Message
     )
-    Write-Host "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'): PS - $Message"
+    [string]$Msg = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'): PS - $Message"
+    Write-Host $Msg
+    $Msg | Out-File -FilePath $LogFile -Append
 }
 
 if ( -Not (Test-Path -Path $BackupFolder) ) {
@@ -40,8 +44,10 @@ Write-Timestamped "Number of backups to delete: $NbBackupsToDelete"
 $BackUpFiles `
 | Sort-Object -Property LastWriteTime `
 | Select-Object -First $NbFilesToDelete `
-| ForEach-Object { Write-Timestamped "Deleting $PSItem.FullName" }
-| Remove-Item -Force
+| ForEach-Object {
+    Write-Timestamped "Deleting $PSItem"
+    Remove-Item -Force -Path $PSItem
+}
 
 Write-Timestamped "Done"
 exit 0
