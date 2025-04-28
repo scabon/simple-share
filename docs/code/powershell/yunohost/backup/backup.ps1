@@ -33,19 +33,24 @@ param (
     # File containing the username and password for the remote server
     [string]$BackupCredentialsFile = 'backupcreds.xml',
     # Number of backups to keep on the local server (0 to disable)
-    [int]$NbLocalBackups = 3
+    [int]$NbLocalBackups = 3,
+    # Log file path
+    [string]$LogFile = './backup.log'
 )
 
 Function Write-Timestamped {
     param (
         [string]$Message
     )
-    Write-Host "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'): PS - $Message"
+    [string]$Msg = "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'): PS - $Message"
+    Write-Host $Msg
+    $Msg | Out-File -FilePath $LogFile -Append
 }
 
+Write-Timestamped "[Info] Writing logs to $LogFile (append)"
 # Launch the yunohost backup command and capture the output
 Write-Timestamped "[Backup] Creating backup with 'sudo yunohost backup create'"
-[string[]]$BackupConsole = & sudo yunohost backup create
+[string[]]$BackupConsole = & sudo yunohost backup create 2>> $LogFile
 [bool]$Success = $False
 [string]$BackupName = ''
 # If the backup worked, we should have something like this in the output:
@@ -105,8 +110,8 @@ If( -Not (Test-Path $BackupCredentialsFile)) {
 [PSCredential]$BackupCredentials = Import-Clixml $BackupCredentialsFile
 # Copy backup files to remote server
 [string]$BackupUser = $BackupCredentials.UserName
-Write-Timestamped "[Copy] scp -P $BackupServerPort $TGZFile $InfoFile "$BackupUser@$($BackupServer):$RemoteBackupFolder
-[string[]]$SCPConsole = & sshpass -p $BackupCredentials.GetNetworkCredential().password scp -P $BackupServerPort $TGZFile $InfoFile "$BackupUser@$($BackupServer):$RemoteBackupFolder"
+Write-Timestamped "[Copy] scp -P $BackupServerPort $TGZFile $InfoFile $BackupUser@$($BackupServer):$RemoteBackupFolder"
+[string[]]$SCPConsole = & sshpass -p $BackupCredentials.GetNetworkCredential().password scp -P $BackupServerPort $TGZFile $InfoFile "$BackupUser@$($BackupServer):$RemoteBackupFolder" 2>> $LogFile
 if ( $SCPConsole.Count -gt 0 ) {
     Write-Error '[Copy] Something went wrong with the SCP command'
     Write-Timestamped $SCPConsole
@@ -116,7 +121,7 @@ if ( $SCPConsole.Count -gt 0 ) {
 # Check if the files were copied to the remote server
 Write-Timestamped '[Copy] Checking if the files were copied to the remote server: '
 Write-Timestamped "[Copy] ssh -p $BackupServerPort $BackupUser@$BackupServer ls -1t $RemoteBackupFolder | head -n 2"
-[string[]]$SSHConsole = & sshpass -p $BackupCredentials.GetNetworkCredential().password ssh -p $BackupServerPort $BackupUser@$BackupServer ls -1t $RemoteBackupFolder | head -n 2
+[string[]]$SSHConsole = & sshpass -p $BackupCredentials.GetNetworkCredential().password ssh -p $BackupServerPort $BackupUser@$BackupServer ls -1t $RemoteBackupFolder | head -n 2 2>> $LogFile
 if ( $SSHConsole.Count -lt 2 ) {
     Write-Error '[Copy] Something went wrong with the SSH command'
     Write-Timestamped $SSHConsole
@@ -124,8 +129,9 @@ if ( $SSHConsole.Count -lt 2 ) {
 } elseif( $SSHConsole -contains $TGZFileName -and $SSHConsole -contains $InfoFileName ) {
     Write-Timestamped '[Copy] Backup files were copied to the remote server'
 } else {
-    Write-Timestamped '[Copy] Not sure of the result!'
+    Write-Timestamped '[Copy] Something went wrong, please check the return of the ls command on the target:'
     Write-Timestamped $SSHConsole
+    exit 2
 }
 Write-Timestamped '[Copy] Done'
 

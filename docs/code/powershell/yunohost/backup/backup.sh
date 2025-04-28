@@ -1,15 +1,17 @@
 #!/bin/bash
-# This script is used to backup files from a remote server using PowerShell.
-# It requires the following parameters:
-# - BackupServer: The server to backup from.
-# - RemoteBackupFolder: The folder on the server to backup.
-# - BackupCredentialsFile: The file containing the credentials to use for the backup.
+# This script is a wrapper used to call the backup.ps1 script using.
 # You need to have PowerShell installed on your system to run this script.
 # You can install it from https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux
-# You can run this script using the following command:
-# ./backup.sh -BackupServer 'zeppel.org' -RemoteBackupFolder '/backups' -BackupCredentialsFile 'backupcreds.xml'
-echo "$(date '+%Y-%m-%d %H:%M:%S'): SH ---------------------" >> ./backup.log
-echo "$(date '+%Y-%m-%d %H:%M:%S'): SH - Launching backup.sh" >> ./backup.log
-pwsh -File ./backup.ps1 -BackupServer 'zeppel.org' -BackupServerPort 22 -RemoteBackupFolder '/backups/yunohost' -BackupCredentialsFile 'backupcreds.xml'
-echo "$(date '+%Y-%m-%d %H:%M:%S'): SH - Finished backup.sh" >> ./backup.log
-echo "$(date '+%Y-%m-%d %H:%M:%S'): SH --------------------" >> ./backup.log
+# Use absolute paths for the script and the log file (apparently required by crontab).
+# This script is intended to be run as a cron job.
+
+# Folder where the backup script is located, and the logs will be written.
+folder="/home/derzeppel/scripts"
+# Date format for the logs timestamp.
+format='+%Y-%m-%d %H:%M:%S'
+echo "$(date "$format"): SH - Writing logs to $folder/backup.log (append)"
+echo "$(date "$format"): SH ---------------------" >> $folder/backup.log
+echo "$(date "$format"): SH - Launching backup.sh" >> $folder/backup.log
+/usr/bin/pwsh -File "$folder/backup.ps1" -LogFile "$folder/backup.log" -BackupServer 'zeppel.org' -BackupServerPort 22 -RemoteBackupFolder '/backups/yunohost' -BackupCredentialsFile 'backupcreds.xml'
+echo "$(date "$format"): SH - Finished backup.sh" >> $folder/backup.log
+echo "$(date "$format"): SH --------------------" >> $folder/backup.log
