@@ -12,6 +12,6 @@ format='+%Y-%m-%d %H:%M:%S'
 echo "$(date "$format"): SH - Writing logs to $folder/backup.log (append)"
 echo "$(date "$format"): SH ---------------------" >> $folder/backup.log
 echo "$(date "$format"): SH - Launching backup.sh" >> $folder/backup.log
-/usr/bin/pwsh -File "$folder/backup.ps1" -LogFile "$folder/backup.log" -BackupServer 'zeppel.org' -BackupServerPort 22 -RemoteBackupFolder '/backups/yunohost' -BackupCredentialsFile 'backupcreds.xml'
+/usr/bin/pwsh -File "$folder/backup.ps1" -LogFile "$folder/backup.log" -ConfigFile '/home/derzeppel/scripts/BackupConf.json'
 echo "$(date "$format"): SH - Finished backup.sh" >> $folder/backup.log
 echo "$(date "$format"): SH --------------------" >> $folder/backup.log
