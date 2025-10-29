@@ -1,10 +1,10 @@
 {
     "Targets":[
         {
-            "BackupServer":"zeppel.com",
+            "BackupServer":"myServer.com",
             "BackupServerPort":22,
             "RemoteBackupFolder":"/backups/yunohost/",
-            "BackupCredentialsFile":"zeppel.com.xml",
+            "BackupCredentialsFile":"/full/path/to/file/myServer.xml",
             "enabled":true
         }
     ]
