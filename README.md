@@ -29,3 +29,5 @@ I'm a Solutions Architect working at a small software company.
 I am no developer, but do write some `PowerShell` and `Javascript` from time to time.
 
 > You can take a look at my [Curriculum Vitae](./docs/cv.md "Link to Curriculum Vitae page") if you are curious
+
+My hobby projects (small apps and browser extensions) live under my **[Cabon14](https://cabon14.com)** umbrella brand.
